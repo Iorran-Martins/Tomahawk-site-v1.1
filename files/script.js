@@ -37,6 +37,12 @@ function initMobileNav() {
   if (!toggle || !nav) return;
 
   var navLinks = nav.querySelectorAll('a');
+  var header = document.querySelector('.site-header');
+  function updateNavTop() {
+    if (header) {
+      nav.style.setProperty('--nav-top', header.getBoundingClientRect().bottom + 'px');
+    }
+  }
 
   function closeNav(shouldRestoreFocus) {
     nav.classList.remove('open');
@@ -47,11 +53,14 @@ function initMobileNav() {
   }
 
   function openNav() {
+    updateNavTop();
     nav.classList.add('open');
     toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-label', 'Fechar menu');
     document.body.classList.add('nav-open');
-    if (navLinks.length) navLinks[0].focus();
+    requestAnimationFrame(function () {
+      if (nav.classList.contains('open') && navLinks.length) navLinks[0].focus();
+    });
   }
 
   toggle.addEventListener('click', function () {
@@ -80,7 +89,10 @@ function initMobileNav() {
 
     var firstLink = navLinks[0];
     var lastLink = navLinks[navLinks.length - 1];
-    if (e.shiftKey && document.activeElement === firstLink) {
+    if (document.activeElement === toggle) {
+      e.preventDefault();
+      (e.shiftKey ? lastLink : firstLink).focus();
+    } else if (e.shiftKey && document.activeElement === firstLink) {
       e.preventDefault();
       lastLink.focus();
     } else if (!e.shiftKey && document.activeElement === lastLink) {
@@ -90,7 +102,8 @@ function initMobileNav() {
   });
 
   window.addEventListener('resize', function () {
-    if (window.innerWidth > 760) closeNav();
+    if (window.innerWidth > 980) closeNav();
+    else updateNavTop();
   });
 }
 
@@ -176,42 +189,19 @@ function initContactForm() {
     subject.value = 'Tenho interesse: ' + productNames[product];
   }
 
-  var sending = false;
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    if (sending) return;
-    if (!form.checkValidity()) {
-      form.reportValidity();
+  /* POST nativo permite que o serviço apresente CAPTCHA e confirmação.
+     Não depende de uma requisição AJAX entre domínios. */
+  form.addEventListener('submit', function (e) {
+    if (window.location.protocol === 'file:') {
+      e.preventDefault();
+      status.textContent = 'Abra o site pelo endereço publicado ou pelo servidor local para enviar. ' +
+        'Você também pode escrever para flagtomahawk@gmail.com.';
+      status.classList.add('visible');
       return;
     }
-    sending = true;
-    sendButton.disabled = true;
-    sendButton.textContent = 'Enviando…';
-    status.textContent = 'Enviando sua mensagem…';
-    status.classList.add('visible');
-    var controller = new AbortController();
-    var timeout = setTimeout(function () { controller.abort(); }, 30000);
-    try {
-      var response = await fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-        signal: controller.signal
-      });
-      var result = await response.json();
-      if (!response.ok || (result.success !== true && result.success !== 'true')) {
-        throw new Error('Envio não confirmado pelo serviço.');
-      }
-      status.textContent = 'Mensagem recebida pelo serviço de envio. Obrigado pelo contato!';
-      form.reset();
-    } catch (error) {
-      status.textContent = 'Não foi possível confirmar o envio. Seus dados foram mantidos. ' +
-        'Tente novamente ou escreva para flagtomahawk@gmail.com.';
-    } finally {
-      clearTimeout(timeout);
-      sending = false;
-      sendButton.disabled = false;
-      sendButton.textContent = 'Enviar mensagem';
-    }
+    sendButton.textContent = 'Continuando para envio…';
+  });
+  window.addEventListener('pageshow', function () {
+    sendButton.textContent = 'Enviar mensagem';
   });
 }
