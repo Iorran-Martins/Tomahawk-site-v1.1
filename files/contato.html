@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fale Conosco — Limeira Tomahawk Futebol Americano</title>
+<meta name="description" content="Entre em contato com o Limeira Tomahawk pelo Instagram @tomahawkfa ou pelo formulário de contato.">
+<link rel="icon" href="assets/simbolo-colorido.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand">
+      <img src="assets/simbolo-colorido.svg" alt="Símbolo do Limeira Tomahawk">
+      <span>Limeira Tomahawk<span class="sub">Futebol Americano</span></span>
+    </a>
+
+    <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
+      <a href="index.html" data-page="index.html">Início</a>
+      <a href="sobre.html" data-page="sobre.html">Sobre</a>
+      <a href="loja.html" data-page="loja.html">Loja</a>
+      <a href="projetos.html" data-page="projetos.html">Projetos</a>
+      <a href="contato.html" data-page="contato.html">Fale Conosco</a>
+      <a href="contato.html" class="btn btn-primary nav-cta">Entre em contato</a>
+    </nav>
+
+    <div class="header-cta">
+      <a href="contato.html" class="btn btn-primary">Fale Conosco</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="main-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="conteudo">
+
+  <section class="section" style="padding-top: clamp(2.5rem, 5vw, 4rem);">
+    <div class="wrap">
+      <span class="tag">Fale Conosco</span>
+      <h1 style="font-size: clamp(2.2rem, 5vw, 3.5rem);">Quer fazer parte do Tomahawk?</h1>
+      <p class="lead">Para dúvidas sobre produtos, participação no time e parcerias, entre em contato pelo e-mail flagtomahawk@gmail.com.</p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap contact-grid" data-reveal>
+
+      <div>
+        <div class="contact-card">
+          <h3>E-mail</h3>
+          <p>Fale com a equipe sobre produtos, treinos e parcerias.</p>
+          <a class="link-value" href="mailto:flagtomahawk@gmail.com">flagtomahawk@gmail.com</a>
+        </div>
+
+        <div class="contact-card">
+          <h3>Instagram</h3>
+          <p>Perfil oficial do Limeira Tomahawk. Mensagens e novidades do time são publicadas por lá.</p>
+          <a class="link-value" href="https://instagram.com/tomahawkfa" target="_blank" rel="noopener noreferrer">@tomahawkfa</a>
+        </div>
+
+        <!-- Fonte: https://www.facebook.com/Tomahawkflag/ (ver fontes.md, item 6) -->
+        <div class="contact-card">
+          <h3>Facebook</h3>
+          <p>Página oficial do time no Facebook.</p>
+          <a class="link-value" href="https://www.facebook.com/Tomahawkflag/" target="_blank" rel="noopener noreferrer">facebook.com/Tomahawkflag</a>
+        </div>
+
+        <div class="contact-card">
+          <h3>Localização</h3>
+          <p>Limeira Tomahawk Futebol Americano — Limeira, São Paulo.</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="contact-card">
+          <h3>Envie uma mensagem</h3>
+          <p>Preencha o formulário abaixo para falar com o Tomahawk.</p>
+
+          <form id="contact-form" action="https://formsubmit.co/flagtomahawk@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="Novo contato — Site Limeira Tomahawk">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="_honey" hidden tabindex="-1" autocomplete="off" aria-hidden="true">
+            <div class="form-field">
+              <label for="nome">Nome</label>
+              <input type="text" id="nome" name="nome" required autocomplete="name">
+            </div>
+            <div class="form-field">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" name="email" required autocomplete="email">
+            </div>
+            <div class="form-field">
+              <label for="assunto">Assunto</label>
+              <input type="text" id="assunto" name="assunto" placeholder="Ex.: Quero jogar no time, dúvida sobre produto, parceria...">
+            </div>
+            <div class="form-field">
+              <label for="mensagem">Mensagem</label>
+              <textarea id="mensagem" name="mensagem" required></textarea>
+            </div>
+            <p class="form-note">Sua mensagem será encaminhada a flagtomahawk@gmail.com pelo FormSubmit. Nome e e-mail serão usados para responder ao seu contato.</p>
+            <button type="submit" class="btn btn-primary" data-contact-submit>Enviar mensagem</button>
+            <div id="contact-form-status" class="form-status" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="assets/simbolo-colorido.svg" alt="">
+          <span>Limeira Tomahawk</span>
+        </div>
+        <p>Equipe de futebol americano de Limeira/SP.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="index.html">Início</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+          <li><a href="loja.html">Loja</a></li>
+          <li><a href="projetos.html">Projetos</a></li>
+          <li><a href="contato.html">Fale Conosco</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato e redes sociais</h4>
+        <ul>
+          <li><a href="mailto:flagtomahawk@gmail.com">flagtomahawk@gmail.com</a></li>
+          <li><a href="https://instagram.com/tomahawkfa" target="_blank" rel="noopener noreferrer">Instagram · @tomahawkfa</a></li>
+          <li><a href="https://www.facebook.com/Tomahawkflag/" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Limeira Tomahawk Futebol Americano — Limeira/SP</span>
+      <span>Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="script.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

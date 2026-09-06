@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" role="img" aria-labelledby="title desc">
+  <title id="title">Imagem aguardando fotografia oficial</title>
+  <desc id="desc">Placeholder esportivo em preto, vermelho e branco para fotos e produtos do Limeira Tomahawk.</desc>
+  <rect width="960" height="720" fill="#141414"/>
+  <path d="M-20 650 460 120 680 120 170 720H-20Z" fill="#c8102e" opacity=".8"/>
+  <path d="M580 0 960 0 960 540 760 540Z" fill="#0a0a0a"/>
+  <path d="M0 576h960M0 432h960M0 288h960M0 144h960" stroke="#2a2a2a" stroke-width="2"/>
+  <g fill="none" stroke="#f4f4f2" stroke-width="10" opacity=".9">
+    <path d="M608 178c74 0 134 60 134 134s-60 134-134 134-134-60-134-134 60-134 134-134Z"/>
+    <path d="m546 312 124 0M608 250v124"/>
+  </g>
+  <text x="60" y="650" fill="#f4f4f2" font-family="Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="3">LIMEIRA TOMAHAWK</text>
+</svg>

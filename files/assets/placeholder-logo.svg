@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title desc">
+  <title id="title">Limeira Tomahawk</title>
+  <desc id="desc">Marca temporária com um machado estilizado em vermelho e branco.</desc>
+  <rect width="120" height="120" rx="8" fill="#141414"/>
+  <path d="M62 15 99 32 79 47 67 43 45 65 37 57 59 35 52 23Z" fill="#c8102e"/>
+  <path d="m31 91 10-10 34-34 8 8-34 34-10 10Z" fill="#f4f4f2"/>
+  <path d="M28 94c7 7 17 7 24 0l-7-7c-3 3-7 3-10 0Z" fill="#c8102e"/>
+  <path d="M18 105h84" stroke="#c8102e" stroke-width="4"/>
+</svg>
