@@ -3,7 +3,7 @@
  * JavaScript vanilla — sem dependências externas.
  * Responsável por: menu mobile, destaque da página atual,
  * animação leve ao revelar seções, botão voltar ao topo
- * e interface visual do formulário de contato.
+ * e interfaces dos formulários de contato e da seletiva.
  */
 
 /* Mantém o conteúdo visível quando o JavaScript estiver desativado. */
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
   safeInit(initRevealOnScroll);
   safeInit(initBackToTop);
   safeInit(initContactForm);
+  safeInit(initTryoutForm);
 });
 
 function safeInit(fn) {
@@ -204,4 +205,69 @@ function initContactForm() {
   window.addEventListener('pageshow', function () {
     sendButton.textContent = 'Enviar mensagem';
   });
+}
+
+/* ------------------------------------------------------------------ */
+/* Formulário da Seletiva 2026                                        */
+/* ------------------------------------------------------------------ */
+function initTryoutForm() {
+  var form = document.querySelector('#tryout-form');
+  if (!form) return;
+
+  var status = document.querySelector('#tryout-form-status');
+  var sendButton = form.querySelector('[data-tryout-submit]');
+  var timestamp = document.querySelector('#carimbo-data-hora');
+  var restrictionRadios = form.querySelectorAll('input[name="Você possui alguma restrição médica que impede a prática de atividade física?"]');
+  var restrictionDetails = document.querySelector('#restricao-detalhes');
+  var restrictionDescription = document.querySelector('#descricao-restricao');
+
+  function updateTimestamp() {
+    if (timestamp) {
+      timestamp.value = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+    }
+  }
+
+  function updateRestrictionField() {
+    var selected = form.querySelector('input[name="Você possui alguma restrição médica que impede a prática de atividade física?"]:checked');
+    var shouldShow = selected && selected.value === 'Sim';
+
+    restrictionDetails.hidden = !shouldShow;
+    restrictionDescription.disabled = !shouldShow;
+    restrictionDescription.required = shouldShow;
+    if (!shouldShow) restrictionDescription.value = '';
+  }
+
+  for (var i = 0; i < restrictionRadios.length; i++) {
+    restrictionRadios[i].addEventListener('change', updateRestrictionField);
+  }
+
+  form.addEventListener('submit', function (e) {
+    updateTimestamp();
+    updateRestrictionField();
+
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      form.reportValidity();
+      return;
+    }
+
+    if (window.location.protocol === 'file:') {
+      e.preventDefault();
+      status.textContent = 'Abra o site pelo endereço publicado ou por um servidor local para enviar sua inscrição.';
+      status.classList.add('visible');
+      return;
+    }
+
+    sendButton.disabled = true;
+    sendButton.textContent = 'Continuando para envio…';
+  });
+
+  window.addEventListener('pageshow', function () {
+    sendButton.disabled = false;
+    sendButton.textContent = 'Enviar inscrição';
+    updateTimestamp();
+  });
+
+  updateTimestamp();
+  updateRestrictionField();
 }
