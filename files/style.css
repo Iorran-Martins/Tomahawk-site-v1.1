@@ -490,9 +490,13 @@ select:focus-visible {
 }
 .product-media img { width: 100%; height: 100%; object-fit: cover; }
 
+.product-media-contain {
+  background: #171717;
+}
+
 .product-media-contain img {
   object-fit: contain;
-  background: #ededed;
+  background: #171717;
 }
 
 .product-brand-media {
