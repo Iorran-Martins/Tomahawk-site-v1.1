@@ -77,6 +77,10 @@ Instagram a ser usado no site. Todos os links públicos foram atualizados para
 `https://instagram.com/tomahawkfa`. As referências a @aabbtomahawkfa acima são
 mantidas apenas como contexto histórico da parceria de 2024/2025.
 
+Em 18 de outubro de 2026, o cliente confirmou o encerramento da parceria com a
+AABB Limeira. O nome "AABB Limeira Tomahawk" permanece no site apenas como
+registro histórico da parceria iniciada em 2024/2025.
+
 ## O que NÃO foi incorporado por falta de confirmação
 
 - Nomes de diretoria, comissão técnica ou elenco (dados encontrados são de

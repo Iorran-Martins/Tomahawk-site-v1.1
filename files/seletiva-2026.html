@@ -78,11 +78,11 @@
             <div class="form-grid">
               <div class="form-field form-field-wide">
                 <label for="nome-completo">Nome completo <span aria-hidden="true">*</span></label>
-                <input type="text" id="nome-completo" name="Nome Completo" required autocomplete="name">
+                <input type="text" id="nome-completo" name="Nome Completo" required autocomplete="name" minlength="3" maxlength="80">
               </div>
               <div class="form-field">
                 <label for="email-seletiva">Endereço de e-mail <span aria-hidden="true">*</span></label>
-                <input type="email" id="email-seletiva" name="Endereço de e-mail" required autocomplete="email">
+                <input type="email" id="email-seletiva" name="Endereço de e-mail" required autocomplete="email" maxlength="254">
               </div>
               <div class="form-field">
                 <label for="nascimento">Data de nascimento <span aria-hidden="true">*</span></label>
@@ -90,19 +90,26 @@
               </div>
               <div class="form-field">
                 <label for="rg">RG <span aria-hidden="true">*</span></label>
-                <input type="text" id="rg" name="RG" required inputmode="numeric" autocomplete="off" maxlength="20">
+                <input type="text" id="rg" name="RG" required inputmode="text" autocomplete="off" maxlength="20" pattern="[0-9A-Za-z.\-]{5,20}" title="Informe um RG com 5 a 20 caracteres, usando apenas letras, números, ponto ou hífen.">
+                <small id="rg-ajuda">Use apenas letras, números, ponto ou hífen.</small>
+              </div>
+              <div class="form-field">
+                <label for="cpf">CPF <span aria-hidden="true">*</span></label>
+                <input type="text" id="cpf" name="CPF" required inputmode="numeric" autocomplete="off" minlength="11" maxlength="11" pattern="[0-9]{11}" title="Informe o CPF com exatamente 11 números, sem pontos ou hífen." aria-describedby="cpf-ajuda">
+                <small id="cpf-ajuda">Digite somente os 11 números, sem pontos ou hífen.</small>
               </div>
               <div class="form-field">
                 <label for="telefone">Telefone <span aria-hidden="true">*</span></label>
-                <input type="tel" id="telefone" name="Telefone" required autocomplete="tel" inputmode="tel" placeholder="(19) 99999-9999">
+                <input type="tel" id="telefone" name="Telefone" required autocomplete="tel" inputmode="numeric" minlength="11" maxlength="11" pattern="[0-9]{11}" title="Informe o telefone com exatamente 11 números, incluindo o DDD." placeholder="19999999999" aria-describedby="telefone-ajuda">
+                <small id="telefone-ajuda">Digite somente os 11 números, incluindo o DDD.</small>
               </div>
               <div class="form-field form-field-wide">
                 <label for="endereco">Endereço completo <span aria-hidden="true">*</span></label>
-                <input type="text" id="endereco" name="Endereço Completo (Rua, N°, bairro)" required autocomplete="street-address" placeholder="Rua, número e bairro">
+                <input type="text" id="endereco" name="Endereço Completo (Rua, N°, bairro)" required autocomplete="street-address" maxlength="160" placeholder="Rua, número e bairro">
               </div>
               <div class="form-field form-field-wide">
                 <label for="cidade">Cidade <span aria-hidden="true">*</span></label>
-                <input type="text" id="cidade" name="Cidade" required autocomplete="address-level2">
+                <input type="text" id="cidade" name="Cidade" required autocomplete="address-level2" maxlength="80">
               </div>
             </div>
           </fieldset>
@@ -141,11 +148,11 @@
               </div>
               <div class="form-field">
                 <label for="nome-uniforme">Nome ou apelido no uniforme <span aria-hidden="true">*</span></label>
-                <input type="text" id="nome-uniforme" name="Nome/Apelido (Para por no uniforme)" required maxlength="20" placeholder="Como deve aparecer">
+                <input type="text" id="nome-uniforme" name="Nome/Apelido (Para por no uniforme)" required maxlength="20" pattern="[A-Za-zÀ-ÖØ-öø-ÿ0-9 .'\-]{2,20}" title="Use de 2 a 20 caracteres, sem símbolos especiais." placeholder="Como deve aparecer">
               </div>
               <div class="form-field">
                 <label for="numero-uniforme">Número no uniforme <span aria-hidden="true">*</span></label>
-                <input type="number" id="numero-uniforme" name="Número (Para por no uniforme, de 1 a 99, será verificado disponibilidade)" required min="1" max="99" inputmode="numeric" placeholder="1 a 99" aria-describedby="numero-ajuda">
+                <input type="text" id="numero-uniforme" name="Número (Para por no uniforme, de 1 a 99, será verificado disponibilidade)" required inputmode="numeric" minlength="1" maxlength="2" pattern="[1-9][0-9]?" title="Informe um número inteiro de 1 a 99." placeholder="1 a 99" aria-describedby="numero-ajuda">
                 <small id="numero-ajuda">A escolha será confirmada conforme disponibilidade.</small>
               </div>
               <div class="form-field form-field-wide">
@@ -174,7 +181,8 @@
             </div>
             <div class="form-field" id="restricao-detalhes" hidden>
               <label for="descricao-restricao">Descreva sua restrição <span aria-hidden="true">*</span></label>
-              <textarea id="descricao-restricao" name="Se anotou sim na questão anterior, descreva sua restrição." disabled></textarea>
+              <textarea id="descricao-restricao" name="Se anotou sim na questão anterior, descreva sua restrição." disabled maxlength="500" aria-describedby="restricao-ajuda"></textarea>
+              <small id="restricao-ajuda">Máximo de 500 caracteres.</small>
             </div>
 
             <div class="consent-box">

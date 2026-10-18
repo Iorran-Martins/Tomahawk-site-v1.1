@@ -30,6 +30,51 @@ function safeInit(fn) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Regras comuns de entrada                                            */
+/* ------------------------------------------------------------------ */
+function onlyDigits(value, maxLength) {
+  return String(value || '').replace(/\D/g, '').slice(0, maxLength);
+}
+
+function bindDigitsOnly(field, maxLength) {
+  if (!field) return;
+
+  field.addEventListener('input', function () {
+    var cleaned = onlyDigits(field.value, maxLength);
+    if (field.value !== cleaned) field.value = cleaned;
+    field.setCustomValidity('');
+  });
+}
+
+function isValidCPF(value) {
+  var cpf = onlyDigits(value, 11);
+  if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+
+  var sum = 0;
+  var i;
+  for (i = 0; i < 9; i++) sum += Number(cpf.charAt(i)) * (10 - i);
+  var firstDigit = (sum * 10) % 11;
+  if (firstDigit === 10) firstDigit = 0;
+  if (firstDigit !== Number(cpf.charAt(9))) return false;
+
+  sum = 0;
+  for (i = 0; i < 10; i++) sum += Number(cpf.charAt(i)) * (11 - i);
+  var secondDigit = (sum * 10) % 11;
+  if (secondDigit === 10) secondDigit = 0;
+  return secondDigit === Number(cpf.charAt(10));
+}
+
+function clearCustomValidity(fields) {
+  for (var i = 0; i < fields.length; i++) {
+    if (fields[i]) fields[i].setCustomValidity('');
+  }
+}
+
+function trimFieldValue(field) {
+  if (field && typeof field.value === 'string') field.value = field.value.trim();
+}
+
+/* ------------------------------------------------------------------ */
 /* Menu mobile                                                         */
 /* ------------------------------------------------------------------ */
 function initMobileNav() {
@@ -193,6 +238,17 @@ function initContactForm() {
   /* POST nativo permite que o serviço apresente CAPTCHA e confirmação.
      Não depende de uma requisição AJAX entre domínios. */
   form.addEventListener('submit', function (e) {
+    trimFieldValue(form.querySelector('#nome'));
+    trimFieldValue(form.querySelector('#email'));
+    trimFieldValue(form.querySelector('#assunto'));
+    trimFieldValue(form.querySelector('#mensagem'));
+
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      form.reportValidity();
+      return;
+    }
+
     if (window.location.protocol === 'file:') {
       e.preventDefault();
       status.textContent = 'Abra o site pelo endereço publicado ou pelo servidor local para enviar. ' +
@@ -217,9 +273,25 @@ function initTryoutForm() {
   var status = document.querySelector('#tryout-form-status');
   var sendButton = form.querySelector('[data-tryout-submit]');
   var timestamp = document.querySelector('#carimbo-data-hora');
+  var cpf = form.querySelector('#cpf');
+  var phone = form.querySelector('#telefone');
+  var rg = form.querySelector('#rg');
+  var uniformNumber = form.querySelector('#numero-uniforme');
   var restrictionRadios = form.querySelectorAll('input[name="Você possui alguma restrição médica que impede a prática de atividade física?"]');
   var restrictionDetails = document.querySelector('#restricao-detalhes');
   var restrictionDescription = document.querySelector('#descricao-restricao');
+
+  bindDigitsOnly(cpf, 11);
+  bindDigitsOnly(phone, 11);
+  bindDigitsOnly(uniformNumber, 2);
+
+  if (rg) {
+    rg.addEventListener('input', function () {
+      var cleaned = rg.value.replace(/[^0-9A-Za-z.\-]/g, '').slice(0, 20);
+      if (rg.value !== cleaned) rg.value = cleaned;
+      rg.setCustomValidity('');
+    });
+  }
 
   function updateTimestamp() {
     if (timestamp) {
@@ -241,11 +313,39 @@ function initTryoutForm() {
     restrictionRadios[i].addEventListener('change', updateRestrictionField);
   }
 
+  function validateStructuredFields() {
+    clearCustomValidity([cpf, phone, uniformNumber]);
+    var valid = true;
+
+    if (cpf && !isValidCPF(cpf.value)) {
+      cpf.setCustomValidity('Informe um CPF válido com exatamente 11 números.');
+      valid = false;
+    }
+
+    if (phone && !/^\d{11}$/.test(phone.value)) {
+      phone.setCustomValidity('Informe o telefone com exatamente 11 números, incluindo o DDD.');
+      valid = false;
+    }
+
+    if (uniformNumber && !/^[1-9]\d?$/.test(uniformNumber.value)) {
+      uniformNumber.setCustomValidity('Informe um número inteiro de 1 a 99.');
+      valid = false;
+    }
+
+    return valid;
+  }
+
   form.addEventListener('submit', function (e) {
+    trimFieldValue(form.querySelector('#nome-completo'));
+    trimFieldValue(form.querySelector('#email-seletiva'));
+    trimFieldValue(form.querySelector('#endereco'));
+    trimFieldValue(form.querySelector('#cidade'));
+    trimFieldValue(form.querySelector('#nome-uniforme'));
+    trimFieldValue(restrictionDescription);
     updateTimestamp();
     updateRestrictionField();
 
-    if (!form.checkValidity()) {
+    if (!validateStructuredFields() || !form.checkValidity()) {
       e.preventDefault();
       form.reportValidity();
       return;
