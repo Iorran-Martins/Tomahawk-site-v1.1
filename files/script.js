@@ -272,12 +272,17 @@ function initTryoutForm() {
 
   var status = document.querySelector('#tryout-form-status');
   var sendButton = form.querySelector('[data-tryout-submit]');
-  var timestamp = document.querySelector('#carimbo-data-hora');
+  var birthDate = form.querySelector('#nascimento');
+  var birthYear = form.querySelector('#nascimento-ano');
+  var birthMonth = form.querySelector('#nascimento-mes');
+  var birthDay = form.querySelector('#nascimento-dia');
+  var honey = form.querySelector('#tryout-website');
   var cpf = form.querySelector('#cpf');
   var phone = form.querySelector('#telefone');
   var rg = form.querySelector('#rg');
   var uniformNumber = form.querySelector('#numero-uniforme');
-  var restrictionRadios = form.querySelectorAll('input[name="Você possui alguma restrição médica que impede a prática de atividade física?"]');
+  var specialTeams = form.querySelector('#special-teams');
+  var restrictionRadios = form.querySelectorAll('input[name="entry.1494405221"]');
   var restrictionDetails = document.querySelector('#restricao-detalhes');
   var restrictionDescription = document.querySelector('#descricao-restricao');
 
@@ -293,14 +298,15 @@ function initTryoutForm() {
     });
   }
 
-  function updateTimestamp() {
-    if (timestamp) {
-      timestamp.value = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-    }
+  function updateBirthDateFields() {
+    var parts = birthDate && birthDate.value ? birthDate.value.split('-') : [];
+    birthYear.value = parts[0] || '';
+    birthMonth.value = parts[1] || '';
+    birthDay.value = parts[2] || '';
   }
 
   function updateRestrictionField() {
-    var selected = form.querySelector('input[name="Você possui alguma restrição médica que impede a prática de atividade física?"]:checked');
+    var selected = form.querySelector('input[name="entry.1494405221"]:checked');
     var shouldShow = selected && selected.value === 'Sim';
 
     restrictionDetails.hidden = !shouldShow;
@@ -336,38 +342,63 @@ function initTryoutForm() {
   }
 
   form.addEventListener('submit', function (e) {
+    e.preventDefault();
     trimFieldValue(form.querySelector('#nome-completo'));
     trimFieldValue(form.querySelector('#email-seletiva'));
     trimFieldValue(form.querySelector('#endereco'));
     trimFieldValue(form.querySelector('#cidade'));
     trimFieldValue(form.querySelector('#nome-uniforme'));
     trimFieldValue(restrictionDescription);
-    updateTimestamp();
+    updateBirthDateFields();
     updateRestrictionField();
 
     if (!validateStructuredFields() || !form.checkValidity()) {
-      e.preventDefault();
       form.reportValidity();
       return;
     }
 
+    if (honey && honey.value) return;
+
     if (window.location.protocol === 'file:') {
-      e.preventDefault();
       status.textContent = 'Abra o site pelo endereço publicado ou por um servidor local para enviar sua inscrição.';
       status.classList.add('visible');
       return;
     }
 
     sendButton.disabled = true;
-    sendButton.textContent = 'Continuando para envio…';
+    sendButton.textContent = 'Enviando…';
+    status.textContent = 'Enviando sua inscrição para a equipe…';
+    status.classList.add('visible');
+
+    var formData = new FormData(form);
+    if (specialTeams && !specialTeams.value) {
+      formData.delete('entry.1551743960');
+    }
+
+    fetch(form.action, {
+      method: 'POST',
+      mode: 'no-cors',
+      credentials: 'omit',
+      body: formData
+    }).then(function () {
+      form.reset();
+      updateRestrictionField();
+      updateBirthDateFields();
+      status.textContent = 'Inscrição enviada com sucesso! Seus dados já foram registrados pela equipe.';
+    }).catch(function () {
+      status.textContent = 'Não foi possível enviar agora. Verifique sua conexão e tente novamente.';
+    }).finally(function () {
+      sendButton.disabled = false;
+      sendButton.textContent = 'Enviar inscrição';
+    });
   });
 
   window.addEventListener('pageshow', function () {
     sendButton.disabled = false;
     sendButton.textContent = 'Enviar inscrição';
-    updateTimestamp();
+    updateBirthDateFields();
   });
 
-  updateTimestamp();
+  updateBirthDateFields();
   updateRestrictionField();
 }
