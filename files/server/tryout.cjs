@@ -1,6 +1,7 @@
 const FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSfvqrBSX-7feKIy6unUr6NCpbhuA4sMg5l41cjr3ksDNPLwAQ/formResponse';
 const MAIL = 'https://formsubmit.co/ajax/flagtomahawk@gmail.com';
 const DAY = 86400000;
+const SITE_ORIGIN = process.env.SITE_ORIGIN || 'https://tomahawk-three.vercel.app';
 const fields = {
   'emailAddress': 254, 'entry.942478611': 80, 'entry.979617444_year': 4,
   'entry.979617444_month': 2, 'entry.979617444_day': 2, 'entry.649875364': 20,
@@ -68,7 +69,7 @@ async function submit(body, { store, fetcher = fetch, now = Date.now }) {
   try { await store.update(record); } catch { /* Initial recovery record still exists. */ }
   try {
     const response = await fetcher(MAIL, {
-      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Origin': SITE_ORIGIN, 'Referer': SITE_ORIGIN + '/seletiva-2026.html' },
       signal: AbortSignal.timeout(12000),
       body: JSON.stringify({
         _subject: 'Nova inscrição — Seletiva Tomahawk 2026', _template: 'table',
