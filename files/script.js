@@ -371,20 +371,28 @@ function initTryoutForm() {
     status.classList.add('visible');
 
     var formData = new FormData(form);
-    if (specialTeams && !specialTeams.value) {
-      formData.delete('entry.1551743960');
-    }
+    var payload = { requestId: createTryoutRequestId(), website: honey ? honey.value : '' };
+    formData.forEach(function (value, key) {
+      payload[key] = typeof value === 'string' ? value : '';
+    });
 
     fetch(form.action, {
       method: 'POST',
-      mode: 'no-cors',
-      credentials: 'omit',
-      body: formData
-    }).then(function () {
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      if (!response.ok) throw new Error('tryout-submit-failed');
+      return response.json();
+    }).then(function (result) {
       form.reset();
       updateRestrictionField();
       updateBirthDateFields();
-      status.textContent = 'Inscrição enviada com sucesso! Seus dados já foram registrados pela equipe.';
+      if (result.registration === 'confirmed' && result.notification === 'accepted') {
+        status.textContent = 'Inscrição registrada e cópia enviada à equipe. Protocolo: ' + result.protocol + '.';
+      } else {
+        status.textContent = 'Recebemos sua inscrição sob o protocolo ' + result.protocol + '. A equipe fará uma conferência antes da confirmação final.';
+      }
     }).catch(function () {
       status.textContent = 'Não foi possível enviar agora. Verifique sua conexão e tente novamente.';
     }).finally(function () {
@@ -401,4 +409,15 @@ function initTryoutForm() {
 
   updateBirthDateFields();
   updateRestrictionField();
+}
+
+function createTryoutRequestId() {
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID();
+  var bytes = new Uint8Array(16);
+  if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
+  else for (var i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+  bytes[6] = (bytes[6] & 15) | 64;
+  bytes[8] = (bytes[8] & 63) | 128;
+  var hex = Array.prototype.map.call(bytes, function (byte) { return byte.toString(16).padStart(2, '0'); }).join('');
+  return hex.slice(0, 8) + '-' + hex.slice(8, 12) + '-' + hex.slice(12, 16) + '-' + hex.slice(16, 20) + '-' + hex.slice(20);
 }

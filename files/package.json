@@ -1,0 +1,7 @@
+{
+  "name": "tomahawk-site",
+  "private": true,
+  "scripts": { "test": "node --test tests/*.test.cjs" },
+  "engines": { "node": "24.x" },
+  "dependencies": { "@vercel/blob": "^2.3.0" }
+}

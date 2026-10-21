@@ -7,6 +7,11 @@
 <meta name="description" content="Inscreva-se para a Seletiva 2026 do Limeira Tomahawk Futebol Americano.">
 <link rel="icon" href="assets/simbolo-colorido.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
+<!-- Vercel Web Analytics -->
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -67,9 +72,7 @@
       </aside>
 
       <div class="tryout-form-card">
-        <form id="tryout-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfvqrBSX-7feKIy6unUr6NCpbhuA4sMg5l41cjr3ksDNPLwAQ/formResponse" method="POST">
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0,1">
+        <form id="tryout-form" action="/api/tryout" method="POST">
           <input type="hidden" id="nascimento-ano" name="entry.979617444_year" value="">
           <input type="hidden" id="nascimento-mes" name="entry.979617444_month" value="">
           <input type="hidden" id="nascimento-dia" name="entry.979617444_day" value="">
@@ -200,7 +203,7 @@
           </fieldset>
 
           <div class="form-submit-area">
-            <p class="form-note">Ao enviar, seus dados serão registrados diretamente na planilha da equipe do Limeira Tomahawk e usados exclusivamente para organizar a seletiva e entrar em contato com você.</p>
+            <p class="form-note">Ao enviar, seus dados serão processados pelo Google Forms e pelo FormSubmit: ficarão registrados na planilha da equipe e uma cópia será encaminhada ao e-mail do Limeira Tomahawk. Para recuperar uma falha de entrega, nome, e-mail, telefone, protocolo e data ficam em registro privado por até 30 dias, com acesso restrito à equipe. Seus dados serão usados exclusivamente para organizar a seletiva e entrar em contato com você.</p>
             <button type="submit" class="btn btn-primary btn-large" data-tryout-submit>Enviar inscrição</button>
             <div id="tryout-form-status" class="form-status" role="status" aria-live="polite"></div>
           </div>
