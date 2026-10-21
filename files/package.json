@@ -1,7 +1,19 @@
 {
-  "name": "tomahawk-site",
+  "name": "limeira-tomahawk",
+  "version": "1.0.0",
+  "description": "Limeira Tomahawk - Futebol Americano official website",
   "private": true,
-  "scripts": { "test": "node --test tests/*.test.cjs" },
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static HTML site - no build step required'",
+    "test": "node --test tests/*.test.cjs"
+  },
   "engines": { "node": "24.x" },
-  "dependencies": { "@vercel/blob": "^2.3.0" }
+  "keywords": ["futebol-americano", "limeira", "tomahawk"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/blob": "^2.3.0"
+  }
 }

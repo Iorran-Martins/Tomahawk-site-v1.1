@@ -64,7 +64,7 @@ async function submit(body, { store, fetcher = fetch, now = Date.now }) {
     record.registration = response.ok && /Sua resposta foi registrada\.|Your response has been recorded\./.test(html)
       ? 'confirmed' : 'unconfirmed';
   } catch { record.registration = 'unconfirmed'; }
-  // The full payload is never written to storage, mail, console, or error logs.
+  // The full payload is never written to recovery storage, console, or error logs.
   try { await store.update(record); } catch { /* Initial recovery record still exists. */ }
   try {
     const response = await fetcher(MAIL, {
