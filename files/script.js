@@ -376,7 +376,7 @@ function initTryoutForm() {
       payload[key] = typeof value === 'string' ? value : '';
     });
 
-    fetch(form.action, {
+    Promise.all([fetch(form.action, {
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -384,11 +384,13 @@ function initTryoutForm() {
     }).then(function (response) {
       if (!response.ok) throw new Error('tryout-submit-failed');
       return response.json();
-    }).then(function (result) {
+    }), sendTryoutEmail(payload)]).then(function (results) {
+      var result = results[0];
+      var emailSent = results[1];
       form.reset();
       updateRestrictionField();
       updateBirthDateFields();
-      if (result.registration === 'confirmed' && result.notification === 'accepted') {
+      if (result.registration === 'confirmed' && emailSent) {
         status.textContent = 'Inscrição registrada e cópia enviada à equipe. Protocolo: ' + result.protocol + '.';
       } else {
         status.textContent = 'Recebemos sua inscrição sob o protocolo ' + result.protocol + '. A equipe fará uma conferência antes da confirmação final.';
@@ -409,6 +411,28 @@ function initTryoutForm() {
 
   updateBirthDateFields();
   updateRestrictionField();
+}
+
+function sendTryoutEmail(payload) {
+  var mail = {
+    _subject: 'Nova inscrição — Seletiva Tomahawk 2026', _template: 'table',
+    Protocolo: payload.requestId, 'Nome completo': payload['entry.942478611'], email: payload.emailAddress,
+    'Data de nascimento': payload['entry.979617444_day'] + '/' + payload['entry.979617444_month'] + '/' + payload['entry.979617444_year'],
+    RG: payload['entry.649875364'], CPF: payload['entry.43192797'], Telefone: payload['entry.1687358232'],
+    Endereço: payload['entry.680141850'], Cidade: payload['entry.1367242974'], Posição: payload['entry.1030420135'],
+    'Special Teams': payload['entry.1551743960'] || 'Não informado', 'Nome no uniforme': payload['entry.55136223'],
+    'Número no uniforme': payload['entry.422728940'], 'Tamanho de camiseta': payload['entry.1021032316'],
+    'Restrição médica': payload['entry.1494405221'], 'Descrição da restrição': payload['entry.338483210'] || 'Não se aplica',
+    'Termo aceito': payload['entry.266559786']
+  };
+  return fetch('https://formsubmit.co/ajax/flagtomahawk@gmail.com', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(mail)
+  }).then(function (response) {
+    if (!response.ok) return false;
+    return response.json();
+  }).then(function (result) {
+    return result && (result.success === true || result.success === 'true');
+  }).catch(function () { return false; });
 }
 
 function createTryoutRequestId() {

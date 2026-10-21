@@ -1,7 +1,5 @@
 const FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSfvqrBSX-7feKIy6unUr6NCpbhuA4sMg5l41cjr3ksDNPLwAQ/formResponse';
-const MAIL = 'https://formsubmit.co/ajax/flagtomahawk@gmail.com';
 const DAY = 86400000;
-const SITE_ORIGIN = process.env.SITE_ORIGIN || 'https://tomahawk-three.vercel.app';
 const fields = {
   'emailAddress': 254, 'entry.942478611': 80, 'entry.979617444_year': 4,
   'entry.979617444_month': 2, 'entry.979617444_day': 2, 'entry.649875364': 20,
@@ -49,7 +47,7 @@ async function submit(body, { store, fetcher = fetch, now = Date.now }) {
     protocol: body.requestId, createdAt: new Date(now()).toISOString(),
     expiresAt: new Date(now() + 30 * DAY).toISOString(),
     name: clean['entry.942478611'], email: clean.emailAddress, phone: clean['entry.1687358232'],
-    registration: 'pending', notification: 'pending'
+    registration: 'pending', notification: 'client'
   };
   try { await store.create(record); }
   catch (error) {
@@ -65,40 +63,9 @@ async function submit(body, { store, fetcher = fetch, now = Date.now }) {
     record.registration = response.ok && /Sua resposta foi registrada\.|Your response has been recorded\./.test(html)
       ? 'confirmed' : 'unconfirmed';
   } catch { record.registration = 'unconfirmed'; }
-  // The full payload is never written to recovery storage, console, or error logs.
   try { await store.update(record); } catch { /* Initial recovery record still exists. */ }
-  try {
-    const response = await fetcher(MAIL, {
-      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Origin': SITE_ORIGIN, 'Referer': SITE_ORIGIN + '/seletiva-2026.html' },
-      signal: AbortSignal.timeout(12000),
-      body: JSON.stringify({
-        _subject: 'Nova inscrição — Seletiva Tomahawk 2026', _template: 'table',
-        Protocolo: record.protocol,
-        'Data do envio': record.createdAt,
-        'Registro no Google Forms': record.registration === 'confirmed' ? 'Confirmado pelo Google Forms' : 'Não confirmado — verificar recuperação privada',
-        'Nome completo': clean['entry.942478611'],
-        'E-mail': clean.emailAddress,
-        'Data de nascimento': clean['entry.979617444_day'] + '/' + clean['entry.979617444_month'] + '/' + clean['entry.979617444_year'],
-        'RG': clean['entry.649875364'],
-        'CPF': clean['entry.43192797'],
-        'Telefone': clean['entry.1687358232'],
-        'Endereço': clean['entry.680141850'],
-        'Cidade': clean['entry.1367242974'],
-        'Posição': clean['entry.1030420135'],
-        'Special Teams': clean['entry.1551743960'] || 'Não informado',
-        'Nome no uniforme': clean['entry.55136223'],
-        'Número no uniforme': clean['entry.422728940'],
-        'Tamanho de camiseta': clean['entry.1021032316'],
-        'Restrição médica': clean['entry.1494405221'],
-        'Descrição da restrição': clean['entry.338483210'] || 'Não se aplica',
-        'Termo aceito': clean['entry.266559786']
-      })
-    });
-    const result = await response.json();
-    record.notification = response.ok && (result.success === true || result.success === 'true') ? 'accepted' : 'unconfirmed';
-  } catch { record.notification = 'unconfirmed'; }
-  // Acceptance by FormSubmit does not prove delivery to the recipient inbox.
-  try { await store.update(record); } catch { /* Do not turn a confirmed registration into a false failure. */ }
+  // FormSubmit accepts the email copy only when it originates in the visitor's browser.
+  // The full payload is never written to recovery storage, console, or error logs.
   return publicStatus(record);
 }
 module.exports = { submit, validate, DAY };

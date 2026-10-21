@@ -26,25 +26,24 @@ test('rejects payloads outside the expected field shape', () => {
   assert.throws(() => validate(body));
 });
 
-test('saves a minimal recovery record before submitting to both destinations', async () => {
+test('saves a minimal recovery record before submitting to Google Forms', async () => {
   const store = memoryStore(); const calls = [];
   const fetcher = async (url, options) => {
     calls.push({ url, options });
     assert.ok(store.records.has(application().requestId));
-    return url.includes('google') ? new Response('Sua resposta foi registrada.', { status: 200 }) : new Response(JSON.stringify({ success: 'true' }), { status: 200 });
+    return new Response('Sua resposta foi registrada.', { status: 200 });
   };
   const result = await submit(application(), { store, fetcher, now: () => Date.UTC(2026, 9, 21) });
-  assert.deepEqual({ registration: result.registration, notification: result.notification, recoverySaved: result.recoverySaved }, { registration: 'confirmed', notification: 'accepted', recoverySaved: true });
-  assert.equal(calls.length, 2);
+  assert.deepEqual({ registration: result.registration, notification: result.notification, recoverySaved: result.recoverySaved }, { registration: 'confirmed', notification: 'client', recoverySaved: true });
+  assert.equal(calls.length, 1);
   assert.deepEqual(Object.keys(store.records.get(application().requestId)).sort(), ['createdAt', 'email', 'expiresAt', 'name', 'notification', 'phone', 'protocol', 'registration']);
-  assert.match(calls[1].options.body, /"CPF":"52998224725"/);
 });
 
 test('does not resubmit the same protocol after a possibly accepted request', async () => {
   const store = memoryStore(); let calls = 0;
-  const fetcher = async url => { calls++; return url.includes('google') ? new Response('Sua resposta foi registrada.') : new Response('{"success":true}'); };
+  const fetcher = async () => { calls++; return new Response('Sua resposta foi registrada.'); };
   await submit(application(), { store, fetcher });
   const second = await submit(application(), { store, fetcher });
-  assert.equal(calls, 2);
+  assert.equal(calls, 1);
   assert.equal(second.registration, 'confirmed');
 });
